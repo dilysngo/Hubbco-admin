@@ -1,0 +1,151 @@
+.header{
+    background-color: #2d3446;
+    .logo{
+        padding: 0 20px;
+        margin-bottom: 0;
+    }
+    .header-menu{
+        padding-left: 0;
+        list-style: none;
+        margin: 0;
+        color: rgba(#ffffff,0.6);
+        font-family: $font-second;
+        font-size: $font-size-big;
+        font-weight: normal;
+        margin-left: 0;
+        background-image: -webkit-gradient(linear, left top, right top, from(#4f6686), to(#253857));
+        background-image: -webkit-linear-gradient(left, #4f6686 0%, #253857 100%);
+        background-image: -o-linear-gradient(left, #4f6686 0%, #253857 100%);
+        background-image: linear-gradient(to right, #4f6686 0%, #253857 100%);
+        >li{
+            display: inline-block;
+            border-left: 1px solid rgba(255, 255, 255, 0.26);
+            margin-right: -4px;
+            padding: 0 30px;
+            vertical-align: top;
+            &:last-child{
+                .header-link{
+                    padding: 6px 16px;
+                    border-radius: 4px;
+                    border: 1px solid rgba(193, 199, 208, 0.33);
+                }
+            }
+        }
+        .header-link{
+            font-family: $font-eighth;
+            font-size: 14px;
+            color: rgba(#ffffff,0.6);
+            padding: 18px 0;
+            display: inline-block;
+            >.icon{
+                padding-right: 16px;
+            }
+        }
+        .form-search{
+            padding: 18px 0;
+            .icon-search{
+                padding-right: 12px;
+            }
+            .ip-search{
+                border: none;
+                background-color: transparent;
+                padding: 0;
+                max-width: 81px;
+                &::-webkit-input-placeholder {
+                    color: rgba(#ffffff,0.6);
+                }
+                &:-ms-input-placeholder {
+                    color: rgba(#ffffff,0.6);
+                }
+                &::-ms-input-placeholder {
+                    color: rgba(#ffffff,0.6);
+                }
+                &::placeholder {
+                    color: rgba(#ffffff,0.6);
+                }
+                &:focus{
+                    outline: none;
+                }
+            }
+        }
+        .dropdown-notify{
+            padding: 16px 0;
+            .dropdown-toggle{
+                border: none;
+                background-color: transparent;
+                padding: 0;
+                &::after{
+                    display: none;
+                }
+            }
+            .icon-alarm{
+                color: rgba(#ffffff,0.6);
+                font-size: 22px;
+                &.is-notify{
+                    position: relative;
+                    &::after{
+                        content: '\f111';
+                        font-family: FontAwesome;
+                        color: #ff0000;
+                        font-size: 8px;
+                        position: absolute;
+                        right: 0;
+                        top: 2px;
+                    }
+                }
+            }
+        }
+    }
+}
+.user-account{
+    padding: 9px 0;
+    .user-avatar{
+        padding-right: 10px;
+    }
+
+    .user-info{
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+        padding-right: 20px;
+        .user-name{
+            color: #c3c9d1;
+            font-family: $font-seventh;
+            font-size: 14px;
+            margin-bottom: 4px;
+            font-weight: normal;
+            text-transform: capitalize;
+        }
+        .user-role{
+            color: #949aa6;
+            font-family: $font-eighth;
+            font-size: 14px;
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+    }
+    .dropdown-user{
+        display: inline-block;
+        .dropdown-toggle{
+            border: none;
+            background-color: transparent;
+            padding: 0;
+            color: #a8aab7;
+            &::after{
+                display: none;
+            }
+            .fa-angle-down{
+                width: 18px;
+                height: 18px;
+                font-size: 18px;
+                padding: 4px;
+                text-align: center;
+                color: #c3c9d1;
+                padding: 0;
+            }
+        }
+        .dropdown-menu{
+            margin-top: 10px;
+        }
+    }
+}

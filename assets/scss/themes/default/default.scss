@@ -1,0 +1,33 @@
+.theme-default{
+    //----Color
+    $color-third: $red;
+    $color-primary: $blue-dark;
+    $color-second: $white;
+    $color-third: $blue-darker;
+    $color-fourth: $black;
+    $color-fifth: $grey-light;
+    $color-sixth: $green;
+    //----Font
+    $font-primary: 'Roboto-Regular', sans-serif;
+    $font-second: 'Roboto-Medium', sans-serif;
+    $font-third: 'Roboto-Bold', sans-serif;
+    $font-fourth: 'ProximaNova-Regular', sans-serif;
+    $font-fifth: 'ProximaNova-Semibold', sans-serif;
+    $font-sixth: 'ProximaNova-Bold', sans-serif;
+    $font-seventh: 'Gilroy-Bold', sans-serif;
+    $font-eighth: 'Gilroy-Medium', sans-serif;
+    $font-ninth: 'Gilroy-Regular', sans-serif;
+
+    @import './general/general.scss';
+    @import './general/header.scss';
+    @import './pages/dashboard.scss';
+    @import './pages/media.scss';
+    @import './pages/login.scss';
+    @import './pages/article.scss';
+    @import './pages/product.scss';
+    @import './pages/gallery.scss';
+    @import './components/filter.scss';
+    @import './components/box-popup.scss';
+    @import './components/view-popup.scss';
+    @import './components/gallery.scss';
+}

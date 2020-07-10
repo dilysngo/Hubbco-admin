@@ -1,0 +1,78 @@
+.template-blank{
+    padding: 90px 15px;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #f3f5f8;
+    .form-description{
+        font-size: 15px;
+        color: #2c3c58;
+        text-align: center;
+        margin: 20px auto 20px;
+        max-width: 350px;
+        font-family: $font-eighth;
+    }
+    &.template-login{
+        .form-group:nth-child(4){
+            margin-bottom: 10px;
+        }
+    }
+}
+.form-container{
+    border-radius: 4px;
+    border: 1px solid #e7e9ec;
+    font-family: $font-primary;
+    max-width: 446px;
+    margin: auto;
+    padding: 50px 58px 36px;
+    background-color: #fff;
+    .form-label{
+        font-family: $font-eighth;
+        color: rgba(#787b87, 0.6);
+        font-size: 9px;
+        padding-top: 6px;
+    }
+    .form-input{
+        color: #4a5d6e;
+        height: 40px;
+        padding: 9px 15px;
+        font-size: 12px;
+        font-family: $font-eighth;
+        border-radius: 3px;
+    }
+    .link-forgot{
+        font-family: $font-eighth;
+        color: #93c83d;
+        font-size: 12px;
+        text-decoration: none;
+        display: block;
+        text-align: right;
+        margin-top: 8px;
+    }
+    .form-btn{
+        margin-bottom: 20px;
+        font-family: $font-seventh;
+    }
+    .form-link{
+        font-family: $font-eighth;
+        font-size: 12px;
+        color: #2c3c58;
+        text-align: center;
+        margin-bottom: 0;
+        >a{
+            color: #93c83d;
+        }
+    }
+}
+.label-remember{
+    color: #4a4a4a;
+    font-size: 12px;
+    margin-bottom: 16px;
+    input[type=checkbox] {
+        width: 12px;
+        height: 12px;
+        &:after{
+            left: 3px;
+            top: 0;
+        }
+    }
+}
