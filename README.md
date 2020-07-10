@@ -1,8 +1,5 @@
-# protect-trip-admin
-Protect Trip Admin
-
-# frontend-seed
-Frontend seed - 2.1.6
+# Hubbco Admin
+Hubbco Admin
 
 ## Configuration
 
