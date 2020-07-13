@@ -2,7 +2,7 @@
     <div class="menu-page">
         <h1 class="logo">
             <img
-                src="/images/screen_logo.svg"
+                src="favicon.svg"
                 alt="hubbco admin"
                 class="logo-img"
             >
