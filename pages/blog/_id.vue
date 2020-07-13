@@ -313,7 +313,6 @@ export default{
     async created() {
         if(this.$route.params.id !== 'create-article') {
             this.post = await this.getBlogs(this.$route.params.id);
-            console.log(this.post, this.post);
             this.title = this.post.title;
             if(this.post.category)
                 this.radioCate = this.post.category.id;
@@ -362,6 +361,8 @@ export default{
                 return;
             if(!this.validateDescription())
                 return;
+            if(!this.validateCategory())
+                return;
             if(!this.validateFile())
                 return;
 
@@ -409,6 +410,8 @@ export default{
             if(!this.validateTitle())
                 return;
             if(!this.validateContent())
+                return;
+            if(!this.validateCategory())
                 return;
             if(!this.validateDescription())
                 return;
@@ -467,7 +470,7 @@ export default{
             }
         },
 
-        validateRadioCate() {
+        validateCategory() {
             if(!this.radioCate) {
                 this.errorText = 'Category of blog is required!';
                 return false;

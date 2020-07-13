@@ -186,7 +186,7 @@ export default{
         this.total = this.paginationBlog && this.paginationBlog.total;
     },
     methods:{
-        async onDelete(blog){
+        onDelete(blog){
             Swal.fire({
                 title:'Are you sure?',
                 text:"You won't be able to revert this!",
@@ -215,7 +215,7 @@ export default{
         },
 
         async getAllBlog() {
-            await this.findBlogs({keyword:this.keyword, type:this.type, limit:this.limit, skip:this.skip}).catch(err=>{
+            await this.findBlogs({keyword:this.keyword, limit:this.limit, skip:this.skip}).catch(err=>{
                 if(err)
                     console.log(err.message);
             });
