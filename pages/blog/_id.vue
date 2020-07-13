@@ -64,6 +64,15 @@
                             placeholder="Enter Title Here"
                         >
                     </div>
+                    <div class="layout-title">
+                        <textarea
+                            v-model="description"
+                            id="w3review" 
+                            name="w3review" 
+                            class="ip-title"
+                            placeholder="Enter Description Here"
+                        />
+                    </div>                    
                     <div class="layout-editor">
                         <no-ssr>
                             <vue-ckeditor
@@ -104,7 +113,7 @@
                                     <ul class="list-publish">
                                         <li class="publish-item">
                                             Status: <span
-                                                v-if="status === 'draft'"
+                                                v-if="status === 'Draft'"
                                                 class="publish-content"
                                             >Draft</span>
                                             <span
@@ -118,7 +127,7 @@
                                         @click="changeStatus"
                                         class="btn-publish"
                                     >
-                                        <span v-if="status ==='draft'">Public Now</span>
+                                        <span v-if="status ==='Draft'">Public Now</span>
                                         <span v-else>Draft Now</span>
                                     </button>
                                 </div>
@@ -260,7 +269,7 @@ export default{
     },
     data() {
         return{
-            status:'draft',
+            status:'Draft',
             id:null,
             file:null,
             url:null,
@@ -268,6 +277,7 @@ export default{
             title:'',
             radioCate:'',
             content:'',
+            description:'',
             errorText:'',
             successText:'',
             post:null,
@@ -288,7 +298,7 @@ export default{
                 author:null,
                 description:null,
                 slug:null,
-                status:null,
+                status:2,
             }
         };
     },
@@ -303,10 +313,13 @@ export default{
     async created() {
         if(this.$route.params.id !== 'create-article') {
             this.post = await this.getBlogs(this.$route.params.id);
+            console.log(this.post, this.post);
             this.title = this.post.title;
-            this.radioCate = this.post.category.id;
+            if(this.post.category)
+                this.radioCate = this.post.category.id;
             this.content = this.post.content;
-            this.url = this.post.images ? this.convertUrlImage(this.post.images[0]) : null;
+            this.description = this.post.description;
+            this.url = this.post.images ? this.convertUrlImage(this.post.images) : null;
             this.status = this.post.status;
         }
         await this.findCategories();
@@ -334,8 +347,7 @@ export default{
         },
 
         changeStatus(){
-            this.status = (this.status === 'draft') ? 'public' : 'draft';
-            console.log(this.status); 
+            this.status = (this.status === 'Draft') ? 'Public' : 'Draft';
         },
 
         previewImage(event) {
@@ -348,13 +360,14 @@ export default{
                 return;
             if(!this.validateContent())
                 return;
-            if(!this.validateRadioCate())
+            if(!this.validateDescription())
                 return;
             if(!this.validateFile())
                 return;
 
             this.blog.author = this.userAuth.profile.firstName;
-            this.blog.status = this.status;
+            if(this.status === 'Public')
+                this.blog.status = 1;
 
             let blog = await this.createBlog(this.blog).catch(err=>{
                 if(err){
@@ -365,13 +378,19 @@ export default{
                 if(! await this.handlerUploadImage(blog.id))
                     return;
 
-                this.errorText = '';   
-                this.title = '';
-                this.radioCate = '';
-                this.content = '';
-                this.successText = 'Add new post is success!';
+                this.successText = 'Create post was successful!';
+                this.reset();
                 this.clearSuccessText();
             }
+        },
+
+        reset() {
+            this.errorText = '';   
+            this.title = '';
+            this.description = '';
+            this.radioCate = '';
+            this.content = '';
+            this.url = '';
         },
 
         handlerOpenModal() {
@@ -391,14 +410,14 @@ export default{
                 return;
             if(!this.validateContent())
                 return;
-            if(!this.validateRadioCate())
+            if(!this.validateDescription())
                 return;
             if(!this.url && !this.validateFile())
                 return;
 
             this.blog.id = this.$route.params.id;
             this.blog.author = this.userAuth.profile.firstName;
-            this.blog.status = this.status;
+            this.blog.status = this.status === 'Draft' ? 2 : 1;
 
             let blog = await this.updateBlog(this.blog).catch(err=>{
                 if(err){
@@ -409,27 +428,37 @@ export default{
                 if(this.file && ! await this.handlerUploadImage(this.blog.id))
                     return;
 
-                this.successText = 'Update post is success!';
+                this.successText = 'Update post was successful!';
                 this.clearSuccessText();
             }            
         },
 
         validateTitle() {
             if(!this.title) {
-                this.errorText = 'Blog title is required!';
+                this.errorText = 'Title of blog is required!';
                 return false;
             }
             else{
                 this.blog.title = this.title;
-                this.blog.description = this.title;
                 this.blog.slug = convertStringToSlug(this.title);
                 return true;
             }
         },
 
+        validateDescription() {
+            if(!this.description) {
+                this.errorText = 'Description of blog is required!';
+                return false;
+            }
+            else{
+                this.blog.description = this.description;
+                return true;
+            }
+        },
+        
         validateContent() {
             if(!this.content) {
-                this.errorText = 'Blog content is required!';
+                this.errorText = 'Content of blog is required!';
                 return false;
             }
             else{
@@ -440,7 +469,7 @@ export default{
 
         validateRadioCate() {
             if(!this.radioCate) {
-                this.errorText = 'Blog category is required!';
+                this.errorText = 'Category of blog is required!';
                 return false;
             }
             else{
@@ -461,7 +490,7 @@ export default{
 
         async handlerUploadImage(id) {
             let formData = new FormData();
-            formData.append('image-product', this.file);
+            formData.append('hubbco-img', this.file);
             let result = await this.uploadImges({id:id, file:formData}).catch(err=>{
                 this.errorText = err.message;
             });

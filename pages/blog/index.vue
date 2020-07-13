@@ -101,7 +101,7 @@
                             </div>
                             <div class="col-lg col-md col-sm-12">
                                 <h3 class="item-normal">
-                                    {{ moment(item.createdAt) }}
+                                    {{ item.createdAt| moment }}
                                 </h3>
                             </div>
                             <div class="col-lg col-md col-sm-12">
@@ -137,10 +137,6 @@
                 </div>
             </div>
         </div>
-        <edit-blog
-            :id="'editblog'"
-            ref="edit"
-        />
     </section>
 </template>
 
@@ -148,7 +144,6 @@
 import Swal from'sweetalert2';
 import Pagination from"~/components/Pagination";
 import{pagination}from'~/helpers/dataHelper';
-import EditBlog from'~/components/blog/EditBlog';
 import{mapGetters, mapActions}from"vuex";
 import moment from"moment";
 
@@ -169,7 +164,6 @@ export default{
     },
     components:{
         Pagination,
-        EditBlog
     },
     watch:{
         keyword:function(newData) {
@@ -192,10 +186,6 @@ export default{
         this.total = this.paginationBlog && this.paginationBlog.total;
     },
     methods:{
-        moment(date) {
-            return moment(date).format('DD-MM-YYYY');
-        },
-
         async onDelete(blog){
             Swal.fire({
                 title:'Are you sure?',
@@ -211,7 +201,7 @@ export default{
                     await this.getAllBlog();
                     Swal.fire(
                         'Deleted!',
-                        'Your category has been deleted.',
+                        'Your blog has been deleted.',
                         'success'
                     );
                 }
@@ -225,7 +215,7 @@ export default{
         },
 
         async getAllBlog() {
-            await this.findBlogs().catch(err=>{
+            await this.findBlogs({keyword:this.keyword, type:this.type, limit:this.limit, skip:this.skip}).catch(err=>{
                 if(err)
                     console.log(err.message);
             });
@@ -248,7 +238,11 @@ export default{
         ...mapActions('blog',['findBlogs', 'getBlogs','deleteBlog'])
 
     },
-   
+    filters:{
+        moment(date) {
+            return moment(date).format('DD-MM-YYYY');
+        }
+    }
 };
 </script>
 

@@ -20,7 +20,7 @@ export default{
         return blog;
     },
     async uploadImges({commit}, data){
-        let result = await this.$axios.$post(`/api/blogs/image-blog?id=${data.id}`, data.file);
+        let result = await this.$axios.$post(`/api/blogs/image?id=${data.id}`, data.file);
         return result;
     },
     async deleteBlog({commit}, id) {
@@ -28,7 +28,10 @@ export default{
         return blog;
     },
     async updateBlog({commit}, data) {
-        const blog = await this.$axios.$post(`/api/blogs/edit`, data);
+        const obj = {...data};
+        delete obj.id;
+        
+        const blog = await this.$axios.$put(`/api/blogs/${data.id}`, obj);
         return blog;
     },
 };

@@ -14,7 +14,7 @@ module.exports = {
             {hid:'description', name:'description', content:process.env.PROJECT_NAME}
         ],
         link:[
-            {rel:'icon', type:'image/x-icon', href:'/favicon.ico'}
+            {rel:'icon', type:'image/x-icon', href:'/favicon.svg'}
         ],
         script:[
             // {src: '//cdn.ckeditor.com/4.6.2/full/ckeditor.js'}
