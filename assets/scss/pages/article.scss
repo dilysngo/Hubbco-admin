@@ -198,7 +198,7 @@
             font-size: 13px;
             font-weight: normal;
         }
-        .radio-mask{
+        .checkbox-mask{
             float: right;
             width: 12px;
             height: 12px;
@@ -219,10 +219,10 @@
                 transform: translate(-50%, -50%);
             }
         }
-        input[type=radio]{
+        input[type=checkbox]{
             display: none;
             &:checked{
-                & + .radio-mask{
+                & + .checkbox-mask{
                     background-color: #93c83d;
                     border-color: #93c83d;  
                 }

@@ -96,7 +96,7 @@
                             </div>
                             <div class="col-lg col-md col-sm-12">
                                 <h3 class="item-normal">
-                                    {{ item.category && item.category.name }}
+                                    {{ item.category.length }}
                                 </h3>
                             </div>
                             <div class="col-lg col-md col-sm-12">

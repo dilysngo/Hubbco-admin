@@ -161,20 +161,23 @@
                                     <ul class="list-category">
                                         <li class="category-item">
                                             <label
-                                                :for="'radio' + index"
+                                                :for="'checkbox' + index"
                                                 class="category-label"
                                                 v-for="(item, index) in listCate"
                                                 :key="index"                                               
                                             >
                                                 {{ item.name }}
                                                 <input
-                                                    v-model="radioCate"
-                                                    type="radio"
-                                                    name="radio"
-                                                    :id="'radio' + index"
+                                                    v-model="checkedCategory"
+                                                    type="checkbox"
+                                                    name="checkbox"
+                                                    :id="'checkbox' + index"
                                                     :value="item.id"
                                                 >
-                                                <span class="radio-mask" />
+                                                <span 
+                                                    class="checkbox-mask"
+                                                    :id="'checkbox' + index"
+                                                /> 
                                             </label>
                                         </li>
                                         <!-- <li class="category-item">
@@ -275,7 +278,7 @@ export default{
             url:null,
             flag:false,
             title:'',
-            radioCate:'',
+            checkedCategory:[],
             content:'',
             description:'',
             errorText:'',
@@ -293,7 +296,7 @@ export default{
             },
             blog:{
                 title:null,
-                categoryId:null,
+                categories:[],
                 content:null,
                 author:null,
                 description:null,
@@ -314,8 +317,12 @@ export default{
         if(this.$route.params.id !== 'create-article') {
             this.post = await this.getBlogs(this.$route.params.id);
             this.title = this.post.title;
-            if(this.post.category)
-                this.radioCate = this.post.category.id;
+            let category = this.post.category;
+            if(category && category.length > 0) {
+                for(let i = 0; i < category.length; i++) {
+                    this.checkedCategory.push(category[i].id);
+                }
+            }
             this.content = this.post.content;
             this.description = this.post.description;
             this.url = this.post.images ? this.convertUrlImage(this.post.images) : null;
@@ -431,6 +438,7 @@ export default{
                 if(this.file && ! await this.handlerUploadImage(this.blog.id))
                     return;
 
+                this.errorText = ''; 
                 this.successText = 'Update post was successful!';
                 this.clearSuccessText();
             }            
@@ -471,12 +479,15 @@ export default{
         },
 
         validateCategory() {
-            if(!this.radioCate) {
+            this.blog.categories = [];
+            if(this.checkedCategory.length === 0 ) {
                 this.errorText = 'Category of blog is required!';
                 return false;
             }
             else{
-                this.blog.categoryId = this.radioCate;
+                for(let i = 0; i < this.checkedCategory.length; i++) {
+                    this.blog.categories.push({id:this.checkedCategory[i]});
+                }
                 return true;
             }
         },
