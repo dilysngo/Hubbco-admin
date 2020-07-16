@@ -42,3 +42,9 @@ export function pagination(page , limit) {
     let skip = (page - 1) * limit;
     return skip;
 };
+
+export function convertStringToSlug(string) {
+    string = string.toLowerCase();
+    string = string.replace(/ /gi, '-');
+    return string;
+}

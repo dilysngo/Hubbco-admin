@@ -22,25 +22,7 @@
                     {{ item.name }}
                 </nuxt-link>
             </li>
-            <!-- <li class="menu-item">
-                <nuxt-link
-                    to="/"
-                    class="menu-link"
-                >
-                    <span class="menu-icon menu-icon-logout fa fa-arrow-circle-o-left" />
-                    Hide Menu
-                </nuxt-link>
-            </li> -->
         </ul>
-        <!-- <div class="logout">
-            <nuxt-link
-                to="/"
-                class="menu-link"
-            >
-                <span class="menu-icon fa fa-sign-out" />
-                Logout
-            </nuxt-link>
-        </div> -->
     </div>
 </template>
 
@@ -51,8 +33,7 @@ export default{
             list:[
                 {name:'Dashboard', link:'/', icon:'icon-dashboard'},
                 {name:'Post', link:'/blog', icon:'icon-article'},
-                // {name: 'Product', link: '/product', icon: 'icon-product'},
-                // {name: 'Provider', link: '/provider', icon: 'icon-product'},
+                {name:'Blog Categories', link:'/category', icon:'icon-product'},
                 {name:'Media', link:'/media', icon:'icon-media'},
                 // {name: 'Menu', link: '/menu', icon: 'icon-menus'},
                 // {name: 'Form', link: '/form', icon: 'icon-form'},
