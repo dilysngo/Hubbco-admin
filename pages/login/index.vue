@@ -11,50 +11,55 @@
             <h3 class="form-description">
                 Please login to your account
             </h3>
-            <div class="form-group">
-                <label
-                    class="form-label"
-                    for="user-name"
-                >
-                    user name
-                </label>
-                <input
-                    name="email"
-                    type="email"
-                    id="email"
-                    placeholder="User name"
-                    class="form-input"
-                    v-model="data.email"
-                >
-            </div>
-            <div class="form-group">
-                <label
-                    class="form-label"
-                    for="user-password"
-                >
-                    Password
-                </label>
-                <input
-                    name="password"
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    class="form-input"
-                    v-model="data.password"
-                >
-                <span
-                    class="form-label-error"
-                    v-if="errorText"
-                >
-                    {{ errorText }}
-                </span>
-            </div>
-            <button
-                class="form-btn"
-                @click="login"
+            <form
+                @submit.prevent
+                @keyup.enter="login" 
             >
-                login
-            </button>
+                <div class="form-group">
+                    <label
+                        class="form-label"
+                        for="user-name"
+                    >
+                        user name
+                    </label>
+                    <input
+                        name="email"
+                        type="email"
+                        id="email"
+                        placeholder="User name"
+                        class="form-input"
+                        v-model="data.email"
+                    >
+                </div>
+                <div class="form-group">
+                    <label
+                        class="form-label"
+                        for="user-password"
+                    >
+                        Password
+                    </label>
+                    <input
+                        name="password"
+                        type="password"
+                        id="password"
+                        placeholder="Password"
+                        class="form-input"
+                        v-model="data.password"
+                    >
+                    <span
+                        class="form-label-error"
+                        v-if="errorText"
+                    >
+                        {{ errorText }}
+                    </span>
+                </div>
+                <button
+                    class="form-btn"
+                    @click="login"
+                >
+                    login
+                </button>
+            </form>
             <nuxt-link
                 to="/forgot-password"
                 class="link-forgot"

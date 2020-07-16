@@ -23,13 +23,13 @@ export function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + '=' + JSON.stringify(cvalue) + ';' + expires + ';path=/';
 };
 
-export function convertToUrl(url) {
-    return'http://localhost:9000/hubbco-core/' + url; // local
-}
-
 // export function convertToUrl(url) {
-//     return'https://minio.namtech.xyz/hubbco-core/' + url; // staging
+//     return'http://localhost:9000/hubbco-core/' + url; // local
 // }
+
+export function convertToUrl(url) {
+    return process.env.MINIO_URL + '/' + url;
+}
 
 export function getCookie(cookieName, stringCookie) {
     let strCookie = new RegExp('' + cookieName + '[^;]+').exec(stringCookie);
@@ -42,5 +42,3 @@ export function pagination(page , limit) {
     let skip = (page - 1) * limit;
     return skip;
 };
-
-export let url = process.env.API_URL_IMAGE;
