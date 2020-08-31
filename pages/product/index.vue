@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 text-right">
                     <nuxt-link
-                        to="/product/create-product"
+                        to="/product/edit"
                         class="btn-normal"
                     >
                         New Product
@@ -51,24 +51,26 @@
                     <div class="row row-label">
                         <div class="col-lg-2 col-md-2 col-sm-12">
                             <span class="txt-label">
-                                Package name
+                                Name
                             </span>
                         </div>
                         <div class="col-lg col-md col-sm-12">
                             <span class="txt-label">
-                                Provider
+                                images
                             </span>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12">
                             <span class="txt-label">
-                                Categories
+                                Brand
                             </span>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12">
                             <span class="txt-label">
-                                Package type
+                                Date
                             </span>
                         </div>
+                        <!-- 
+                       
                         <div class="col-lg col-md col-sm-12">
                             <span class="txt-label">
                                 Promotion
@@ -78,7 +80,7 @@
                             <span class="txt-label">
                                 Status
                             </span>
-                        </div>
+                        </div> -->
                         <div class="col-lg-2 col-md-2 col-sm-12">
                             <span class="txt-label">
                                 Actions
@@ -97,15 +99,31 @@
                                 </h3>
                             </div>
                             <div class="col-lg col-md col-sm-12 img-provider">
-                                <h3 class="item-normal">
-                                    <img src="~/assets/images/provider.png">
+                                <img
+                                    style="    width: 150px;height: 150px;"
+                                    :src="item && item.avatar?domainMedia+item.avatar:'/images/photoDefault/noImage_product.png'"
+                                    alt="avatar"
+                                    class="img-thumbnail"
+                                >
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-12">
+                                <h3
+                                    class="item-normal"
+                                    v-if="item.brand && item.brand.name "
+                                >
+                                    {{ item.brand.name }}
                                 </h3>
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-12">
-                                <h3 class="item-normal">
-                                    {{ item.category }}
-                                </h3>
+                                <span class="txt-label">
+                                    Date
+                                </span>
                             </div>
+                            <!-- <div class="col-lg-2 col-md-2 col-sm-12">
+                            <span class="txt-label">
+                                Package type
+                            </span>
+                        </div>
                             <div class="col-lg-2 col-md-2 col-sm-12">
                                 <h3 class="item-normal">
                                     {{ item.type }}
@@ -120,14 +138,14 @@
                                 <h3 class="item-normal">
                                     Published
                                 </h3>
-                            </div>
+                            </div> -->
                             <div class="col-lg-2 col-md-2 col-sm-12">
-                                <a
+                                <!-- <a
                                     href="/"
                                     class="item-btn btn-view"
                                 >
                                     <span class="icon-view" />
-                                </a>
+                                </a> -->
                                 <button class="item-btn btn-view">
                                     <span class="icon-article" />
                                 </button>
@@ -141,7 +159,7 @@
                 <div class="paginate">
                     <pagination
                         id="pagination"
-                        :page="page"
+                        :skip="skip"
                         :limit="limit"
                         :total="total" 
                         @change="changePage"
@@ -156,73 +174,78 @@
 import FilterKeyword from"~/components/FilterKeyword";
 import FilterSelect from"~/components/FilterSelect";
 import Pagination from"~/components/Pagination";
-import{mapGetters, mapActions}from"vuex";
+import{pagination}from'~/helpers/dataHelper';
+import{mapGetters, mapActions, mapState}from"vuex";
 import moment from"moment";
 
 export default{
+    components:{
+        FilterKeyword,
+        FilterSelect,
+        Pagination
+    },
     data() {
         return{
-            keyword:"",
             dataCategory:[
                 {name:"All Provider", value:0},
                 {name:"Provider", value:1}
             ],
             sortCategory:"",
             dataDate:[],
-            page:0,
+            keyword:"",
+            flag:false,
+            categories:[],
+            page:1,
             limit:10,
             skip:0,
             total:0,
         };
     },
+    async created() {
+        const _this = this;
+
+        await this.getProducts();
+    },
     async mounted() {
-        await this.findProduct();
-        console.log('listProduct',this.listProduct);
+        // await this.findProduct();
+        // console.log('listProduct',this.listProduct);
     },
-    components:{
-        FilterKeyword,
-        FilterSelect,
-        Pagination
-    },
+  
     computed:{
+
+        ...mapGetters('products', ['listProduct']),
         ...mapGetters("provider", ["listProvider"]),
-        ...mapGetters("product", ["listProduct","pagination"]),
+        ...mapState(['domainMedia']),
+        ...mapState({
+            pagination:(state)=>state.products.pagination
+        }),
+        // ...mapGetters("product", ["listProduct","pagination"]),
     },
     methods:{
         async changePage(page) {
-            this.page = page;
-            let params =
-            {
-                area:this.area,
-                startDate:this.startDate,
-                endDate:this.endDate,
-                ages:this.ages,
-                isPromotion:this.isPromotion,
-                listProvider:String(this.listProvider),
-                sortBy:this.sortBy,
-                medicalCost:this.medicalCost,
-                personalCost:this.personalCost,
-                visitingCost:this.visitingCost,
-                medicalTransport:this.medicalTransport,
-                skip:this.page - 1
+            let data = pagination(page, this.limit);
+            this.skip = data;
+            await this.getProduct();
+        },
+        handleUpdateSuccess() {
+            this.getProduct();
+        },
+        async getProduct() {
+            const obj = {
+                keyword:this.keyword, 
+                limit:this.limit, 
+                skip:this.skip
             };
-            let data = await this.findProduct(params);
-            if(data && data.pagination.total){
-                this.listPackagePrice.forEach(item=>{
-                    $(`#${item.rowId}`).removeClass('selected');
-                });
-                this.listCompare.forEach(item=>{
-                    $(`#${item.rowId}`).addClass('selected');
-                });
-                this.preventCheck();
-            }
+            const{results, pagination} = await this.getProducts(obj);
+            this.categories = results;
+            this.total = pagination && pagination.total;
         },
         ...mapActions("provider", ["findProviders"]),
         ...mapActions("product", ["findProduct"]),
+        ...mapActions("products",["getProducts"])
+
     },
-    created() {
-       
-    }
+
 };
 </script>
 

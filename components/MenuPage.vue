@@ -33,6 +33,7 @@ export default{
             list:[
                 {name:'Dashboard', link:'/', icon:'icon-dashboard'},
                 {name:'Post', link:'/blog', icon:'icon-article'},
+                {name:'Products', link:'/product', icon:'icon-article'},
                 {name:'Blog Categories', link:'/category', icon:'icon-product'},
                 {name:'Media', link:'/media', icon:'icon-media'},
                 {name:'Brands', link:'/brands', icon:'icon-settings'}
