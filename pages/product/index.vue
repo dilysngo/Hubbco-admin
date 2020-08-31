@@ -146,9 +146,16 @@
                                 >
                                     <span class="icon-view" />
                                 </a> -->
-                                <button class="item-btn btn-view">
-                                    <span class="icon-article" />
-                                </button>
+
+                                <nuxt-link
+                                    class="create-link"
+                                    :to="`/product/edit/${item.id}`"
+                                >
+                                    <button class="item-btn btn-view">
+                                        <span class="icon-article" />
+                                    </button>
+                                </nuxt-link>
+                            
                                 <button class="item-btn btn-view">
                                     <span class="icon-delete" />
                                 </button>
