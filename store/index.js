@@ -34,7 +34,7 @@ export default function() {
             blog,
             provider,
             brands,
-            products:productsModule
+            // products:productsModule
         }
     });
 };
