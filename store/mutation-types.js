@@ -13,5 +13,5 @@ export default{
     ...providerTypes,
     ...mediaTypes,
     ...brandTypes,
-    ...productsType
+    ...productsTypes
 };

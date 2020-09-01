@@ -5,8 +5,6 @@
             content="Product"
         />
         <el-form
-            ref="form"
-            :model="form"
             label-width="200px"
             style="margin-top: 20px;"
         >
@@ -56,8 +54,6 @@
             </el-form-item>
    
             <el-form-item label="Avatar">
-                <!-- :on-success="handleAvatarSuccess"
-                                 action="https://jsonplaceholder.typicode.com/posts/" -->
                 <div
                     class="avatar-uploader"
                     @click="chooseFile"
@@ -90,35 +86,21 @@
                             @change="onFileSelected"
                         >
                     </div>
-                </div>
-                <!-- <el-upload
-                    class="avatar-uploader"
-                    :show-file-list="false"
-             
-                    :before-upload="beforeAvatarUpload"
-                >
-                    <img
-                        v-if="imageUrl"
-                        :src="imageUrl"
-                        class="avatar"
-                    >
-                    <img
-                        v-else-if="formDataProduct && formDataProduct.avatar" 
-                        :src="domainMedia + formDataProduct.avatar"
-                        class="avatar"
-                    >
-                    <i
-                        v-else
-                        class="el-icon-plus avatar-uploader-icon"
-                    />
-                </el-upload> -->
+                </div>   
             </el-form-item>
+            <el-form-item label="Images product">
+                <UploadImage
+                    :current="formDataProduct.medias"
+                    @imageUpload="fileUpload"
+                />
+            </el-form-item>
+     
             <el-form-item style="float: right;"> 
                 <el-button
                     type="primary"
                     @click="submitProduct"
                 >
-                    Create
+                    Save
                 </el-button>
                 <!-- <el-button>Cancel</el-button> -->
             </el-form-item>
@@ -126,10 +108,15 @@
     </div>
 </template>
 <script>
+import UploadImage from'~/components/uploadImages';
 import{mapActions, mapState, mapGetters}from'vuex';
 import CommonData from'~/utils/common-data';
 export default{
+    components:{
+        UploadImage
+    },
     data() {
+        
         return{
             CommonData,
             formDataProduct:{
@@ -148,7 +135,8 @@ export default{
                 medias:[],
             },
             imageUrl:'',
-            filesUpload:''
+            filesUpload:'',
+            filesUploadSlider:[],
 
         };
     },
@@ -182,7 +170,10 @@ export default{
     // this.dataProductEditor.categories = _allCategories || [];
     },
     methods:{
-        ...mapActions('products', ['createProduct','getProductByID','updateProduct','uploadAvatarProduct']),
+        ...mapActions('products', ['createProduct','getProductByID','updateProduct','uploadAvatarProduct','uploadImageProduct']),
+        fileUpload(val) {
+            this.filesUploadSlider = val;
+        },
         chooseFile() {
             this.$refs.file.click();
         },
@@ -230,11 +221,25 @@ export default{
                         data:_this.formDataProduct
                     });
                     this.uploadAvatar(this.$route.params.id);
+                    if(_this.filesUploadSlider && _this.filesUploadSlider.length > 0){
+                        await this.uploadImageProduct({
+                            files:_this.filesUploadSlider,
+                            idProduct:this.$route.params.id,
+                        });
+                    }
+               
                 }
                 else{
                     fetchedData = await _this.createProduct(_this.formDataProduct);
                     if(fetchedData && fetchedData.id ){
                         this.uploadAvatar(fetchedData.id);
+                        if(_this.filesUploadSlider && _this.filesUploadSlider.length > 0){
+                            await this.uploadImageProduct({
+                                files:_this.filesUploadSlider,
+                                idProduct:fetchedData.id,
+                            });
+                        }
+                     
                     }
                
                 }
@@ -264,13 +269,17 @@ export default{
         },
         uploadAvatar(id){
             const _this = this;
-            _this.uploadAvatarProduct(
-                {
-                    _id:id,
-                    filesUploads:this.filesUpload
-                }
-            );
+            if(this.filesUpload ){
+                _this.uploadAvatarProduct(
+                    {
+                        _id:id,
+                        filesUploads:this.filesUpload
+                    }
+                );
+            }
+       
         }
+    
     }
 };
 </script>

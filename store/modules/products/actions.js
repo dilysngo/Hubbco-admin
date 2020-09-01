@@ -59,10 +59,11 @@ async function updateProduct({commit, state}, data) {
 }
 async function uploadAvatarProduct({commit, state}, data) {
     try{
-        // const fetchedData = await this.$axios.$post(`api/products/upload/${data.id}`);
+        // https://hubbco-core.namtech.xyz/api/products/avatar/
+        console.log(data);
         const formData = new FormData();
         formData.append('product', data.filesUploads);
-        const fetchedData = this.$axios.$post(`api/products/upload/${data._id}`, formData,
+        const fetchedData = this.$axios.$post(`/api/products/avatar/${data._id}`, formData,
             {
                 headers:{
                     'Content-Type':'multipart/form-data'
@@ -74,8 +75,28 @@ async function uploadAvatarProduct({commit, state}, data) {
         console.log(e);
     }
 }
+async function uploadImageProduct({commit, state}, data) {
+    try{
+        if(data.files && data.files.length) {
+            data.files.forEach(o=>{
+                const formData = new FormData();
+                formData.append('product', o);
+                this.$axios.$post(`api/products/upload/${data.idProduct}`, formData,
+                    {
+                        headers:{
+                            'Content-Type':'multipart/form-data'
+                        }
+                    });
+            });
+        }
+    }
+    catch(e) {
+        console.log(e);
+    }
+}
 
 export default{
+    uploadImageProduct,
     getProducts,
     createProduct,
     getProductByID,
