@@ -35,6 +35,21 @@ async function getProductByID({commit, state}, data) {
         console.log(e);
     }
 }
+async function getProductsByBrandId({commit, state}, data) {
+    try{
+        const fetchedData = await this.$axios.$get(`api/products/brand/${data._id}`);
+        if(fetchedData && fetchedData.results) {
+            commit('SET_DATA_PRODUCTS_BY_BRAND', fetchedData);
+            return fetchedData;
+        }
+
+        else
+            this.errorText = 'Incorrect product';
+    }
+    catch(e) {
+        console.log(e);
+    }
+}
 async function updateProduct({commit, state}, data) {
     try{
         const dataPut = {
@@ -100,6 +115,7 @@ export default{
     getProducts,
     createProduct,
     getProductByID,
+    getProductsByBrandId,
     updateProduct,
     uploadAvatarProduct
 };

@@ -6,5 +6,8 @@ export default{
     },
     [types.CATEGORY_PAGINATION](state, pagination) {
         state.pagination = pagination;
-    }
+    },
+    [types.ALL_CATEGORY](state, allCategories) {
+        state.allCategories = allCategories;
+    },
 };
