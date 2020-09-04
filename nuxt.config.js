@@ -44,7 +44,8 @@ module.exports = {
         {src: '~/plugins/vue-chartjs', ssr: false},
         {src: '~/plugins/vue-ckeditor2', ssr: false},
         {src: '~/plugins/vue-ckeditor5', ssr: false},
-        {src: '~/plugins/element-ui', ssr: true}
+        {src: '~/plugins/element-ui', ssr: true},
+        {src: '~/plugins/vee-validate', ssr: false},
 
     ],
     /*
@@ -58,7 +59,8 @@ module.exports = {
             'vue-notification',
             'vue-ckeditor2',
             'vue-ckeditor5',
-            'element-ui'
+            'element-ui',
+            'vee-validate',
 
         ],
         plugins: [
