@@ -124,7 +124,6 @@ export default{
         this.isRenderCarousel = true;
         for(const item of this.currentListUrl)
             this.currentlistFormat.push({flag:0, data:item, isImage:this.checkImage(item.imageInfo.url), dialogVisible:false});
-        console.log(this.currentlistFormat);
     },
     methods:{
         addMedia() {

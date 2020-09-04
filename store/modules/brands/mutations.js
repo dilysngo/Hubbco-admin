@@ -17,7 +17,6 @@ export default{
         state.productByBrand = productByBrand;
     },
     [types.BRAND_DELETED_ID](state, id) {
-        debugger;
         state.allBrandList = state.allBrandList.filter(item=>item.id !== Number(id));
     }
 };

@@ -10,6 +10,38 @@
             label-width="180px"
             style="margin-top: 20px;"
         >
+            <el-form-item
+                label="Supplier"
+                v-if="!$route.params.id"
+            >
+                <el-select
+                    v-model="brandInfo.supplierId"
+                    clearable 
+                    filterable
+                    remote
+                    reserve-keyword
+                    placeholder="Choose supplier"
+                    :remote-method="remoteMethod"
+                    :loading="loadingSupplier"
+                    id="supplierId"
+                    name="supplierId"
+                    :class="{'has-error': errors && errors.firstRule('supplierId') === 'required'}"
+                    v-validate="'required'"
+                >
+                    <el-option
+                        v-for="item in supplierList"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                    />
+                </el-select>
+                <div
+                    v-if="errors && errors.firstRule('supplierId') === 'required'"
+                    class="text-error text-red"
+                >
+                    Supplier is not empty.
+                </div>
+            </el-form-item>
             <el-form-item label="Brand name">
                 <el-input
                     v-model="brandInfo.brandName"
@@ -211,6 +243,7 @@ export default{
         return{
             brandInfo:{
                 brandId:this.$route.params.id ? Number(this.$route.params.id) : null,
+                supplierId:null,
                 brandName:'Brand name',
                 brandAvatar:'/images/photoDefault/noImage_brand.png',
                 brandOrigin:'AUSTRALIA',
@@ -226,16 +259,16 @@ export default{
             formDataBackground:null,
             formDataMedias:null,
             isLoading:true,
-            errorCaterories:false
+            errorCaterories:false,
+            supplierList:[],
+            loadingSupplier:false
         };
     },
     async created() {
         this.getInfoBrand();
     },
     methods:{
-        ...mapActions('category',['findCategories']),
-        ...mapActions('blog',['getBlogs','updateBlog','uploadImges','createBlog']),
-        ...mapActions('brands', ['getBrandById','uploadAvatarBrand','uploadBannerBrand','uploadIntroBrand']),
+        ...mapActions('brands', ['getBrandById','uploadAvatarBrand','uploadBannerBrand','uploadIntroBrand','getAllSuppliers','updateBrand','createBrand']),
         async getInfoBrand() {
             if(this.$route.params.id) {
                 this.isLoading = false;
@@ -254,7 +287,25 @@ export default{
                     this.brandInfo.hasBackground = result.data.background ? true : false;
                     this.isLoading = true;
                 }
+                this.formDataAvatar = null;
+                this.formDataBackground = null;
+                this.formDataMedias = null;
             }
+        },
+        async remoteMethod(query) {
+            if(query) {
+                this.loading = true;
+                setTimeout(()=>{
+                    this.getSuppliers(query); 
+                }, 200);
+            }
+            else{
+                this.supplierList = [];
+            }
+        },
+        async getSuppliers(query) {
+            this.loadingSupplier = false;
+            this.supplierList = await this.getAllSuppliers({keyword:query, skip:0, limit:10});
         },
         async changeProfileAvatar(event) {
             const i = event.target;
@@ -351,10 +402,9 @@ export default{
                 });
                 return;
             }
-            const data = {
+            let data = {
                 name:this.brandInfo.brandName,
                 origin:this.brandInfo.brandOrigin,
-                supplierId:null,
                 bio:this.brandInfo.brandBio,
                 brandIntro:null,
                 categoryProducts:this.brandInfo.brandCategories
@@ -373,6 +423,7 @@ export default{
                 this.$router.push({path:'/brands'});
             }
             else{
+                data = Object.assign(data, {supplierId:this.brandInfo.supplierId});
                 const result = await this.createBrand(data).catch(err=>{
                     console.log(err);
                 });
@@ -388,8 +439,8 @@ export default{
             }
         },
         async uploadDataByFormData() {
-            if(this.formDataImgBanner) {
-                await this.uploadBannerBrand({id:this.brandInfo.brandId, formData:this.formDataImgBanner}).catch(e=>{
+            if(this.formDataBackground) {
+                await this.uploadBannerBrand({id:this.brandInfo.brandId, formData:this.formDataBackground}).catch(e=>{
                     console.log(e);
                 });
             }
@@ -399,8 +450,8 @@ export default{
                     console.log(e);
                 });
             }
-            if(this.formDataIntro) {
-                await this.uploadIntroBrand({id:this.brandInfo.brandId, formData:this.formDataIntro}).catch(e=>{
+            if(this.formDataMedias) {
+                await this.uploadIntroBrand({id:this.brandInfo.brandId, formData:this.formDataMedias}).catch(e=>{
                     console.log(e);
                 });
             }

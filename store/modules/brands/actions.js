@@ -52,16 +52,14 @@ export default{
     },
     async uploadIntroBrand({commit}, option) {
         const data = await this.$axios.post(
-            `/api/brands/intro?id=${option.id}`,
+            `/api/media/upload/brand/${option.id}`,
             option.formData,
             {
                 headers:{
-                    "Content-Type":"multipart/form-data"
+                    'Content-Type':'multipart/form-data',
                 }
             }
         );
-        commit(types.ALL_BRANDLIST, data.results);
-        commit(types.BRAND_PAGINATION, data.pagination);
         return data;
     },
     async getBrandList({commit}, conditions) {
@@ -108,7 +106,7 @@ export default{
     async getBrandListByArraySupplier({commit}, conditions) {
         if(!conditions)
             conditions = {};
-        const data = await this.$axios.$get(`/api/brands/supplier/arr?ids=${conditions.ids}&keyword=${conditions.keyword}&skip=${conditions.skip || 0}&limit=${conditions.limit || 10}`);
+        const data = await this.$axios.$get(`/api/brands/supplier/arr?${conditions.ids === '[]' ? '' : 'ids=' + conditions.ids}&keyword=${conditions.keyword}&skip=${conditions.skip || 0}&limit=${conditions.limit || 10}`);
         commit(types.ALL_BRANDLIST, data.results);
         commit(types.BRAND_PAGINATION, data.pagination);
         return data;

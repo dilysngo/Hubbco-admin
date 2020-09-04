@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <h2 class="page-title">
-                        Post
+                        Brands
                     </h2>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 text-right">
@@ -12,7 +12,7 @@
                         to="/brands/brand-detail/"
                         class="btn-normal"
                     >
-                        New Post
+                        New Brand
                     </nuxt-link>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                 <div class="page-filter">
                     <ul class="filter-sub">
                         <li class="item">
-                            All Posts
+                            All Brands
                             <span class="item-value">
                                 ({{ total }})
                             </span>
@@ -40,7 +40,7 @@
                                 filterable
                                 remote
                                 reserve-keyword
-                                placeholder="Please enter a keyword"
+                                placeholder="Please choose a supplier"
                                 :remote-method="remoteMethod"
                                 :loading="loading"
                             >
@@ -53,7 +53,10 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="Keyword">
-                            <el-input v-model="formSearch.keyword" />
+                            <el-input
+                                placeholder="Please enter a keyword"
+                                v-model="formSearch.keyword"
+                            />
                         </el-form-item>
                         <el-form-item>
                             <el-button
@@ -261,7 +264,6 @@ export default{
         async getSuppliers(query) {
             this.loading = false;
             this.supplierList = await this.getAllSuppliers({keyword:query, skip:0, limit:10});
-            console.log(this.supplierList);
         }
     },
     filters:{
