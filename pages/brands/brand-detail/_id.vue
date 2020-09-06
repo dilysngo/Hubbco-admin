@@ -169,9 +169,9 @@
 
             <el-form-item label="Brand categories">
                 <div class="brand-categories">
-                    <ul v-if="brandInfo.brandCategories.length > 0">
+                    <ul v-if="brandCategoriesDisplay.length > 0">
                         <li
-                            v-for="item in brandInfo.brandCategories"
+                            v-for="item in brandCategoriesDisplay"
                             :key="item.id"
                         >
                             <span>
@@ -215,7 +215,6 @@
                 >
                     {{ $route.params.id ? 'Save brand' : 'Create brand' }}
                 </el-button>
-                <!-- <el-button>Cancel</el-button> -->
             </el-form-item>
         </el-form>
         <PopupSelectCategories
@@ -261,7 +260,8 @@ export default{
             isLoading:true,
             errorCaterories:false,
             supplierList:[],
-            loadingSupplier:false
+            loadingSupplier:false,
+            brandCategoriesDisplay:[]
         };
     },
     async created() {
@@ -290,6 +290,7 @@ export default{
                 this.formDataAvatar = null;
                 this.formDataBackground = null;
                 this.formDataMedias = null;
+                this.formatBrandDisplay();
             }
         },
         async remoteMethod(query) {
@@ -360,8 +361,10 @@ export default{
         },
         handleSaveCategory(newCategory) {
             this.brandInfo.brandCategories = [];
+            this.brandCategoriesDisplay = [];
             this.brandInfo.brandCategories = newCategory;
             this.errorCaterories = false;
+            this.formatBrandDisplay();
         },
         goBack() {
             this.$router.push({path:'/brands/'});
@@ -454,6 +457,21 @@ export default{
                 await this.uploadIntroBrand({id:this.brandInfo.brandId, formData:this.formDataMedias}).catch(e=>{
                     console.log(e);
                 });
+            }
+        },
+        formatBrandDisplay() {
+            if(this.brandInfo.brandCategories.length === 0) {
+                this.brandCategoriesDisplay = [];
+                return;
+            }
+            for(const item of this.brandInfo.brandCategories) {
+                if(!item.parentId) {
+                    const temp = this.brandInfo.brandCategories.find(e=>e.parentId === item.id);
+                    if(temp !== undefined)
+                        this.brandCategoriesDisplay.push(temp);
+                    else
+                        this.brandCategoriesDisplay.push(item);
+                }
             }
         }
     },
