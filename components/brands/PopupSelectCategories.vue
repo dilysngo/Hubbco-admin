@@ -197,8 +197,10 @@ export default{
             if(this.listParentSelected.length > 0) {
                 const list = [];
                 for(const i in this.listParentSelected) {
-                    if(this.listParentSelected[i].children.length > 0)
+                    if(this.listParentSelected[i].children.length > 0) {
+                        list.push(this.listParentSelected[i]);
                         list.push(this.listChildSelected[i]);
+                    }
                     else
                         list.push(this.listParentSelected[i]);
                 }
@@ -220,28 +222,25 @@ export default{
                 console.log(err);
             });
             if(this.categoryProducts.length > 0) {
+                let j = 0;
                 for(const i in this.categoryProducts) {
-                    if(this.categoryProducts[i].parentId) {
-                        this.listParentSelected[i] = this.allCategories.find(
-                            (el)=>el.id ===
-                                this.categoryProducts[i].parentId
-                        );
-                        this.listIdParent[i] = this.listParentSelected[i].id;
-                        this.listChildSelected[i] = this.listParentSelected[
-                            i
-                        ].children.find(
+                    if(!this.categoryProducts[i].parentId) {
+                        this.listParentSelected[j] = this.allCategories.find(
                             (el)=>el.id === this.categoryProducts[i].id
                         );
-                        this.listIdChild[i] = this.listChildSelected[i].id;
+                        this.listIdParent[j] = this.listParentSelected[j].id;
+                        if(this.categoryProducts[Number(i) + 1] && this.categoryProducts[Number(i) + 1].parentId) {
+                            this.listChildSelected[j] = this.listParentSelected[j].children.find((el)=>el.id === this.categoryProducts[Number(i) + 1].id);
+                            this.listIdChild[j] = this.listChildSelected[j].id;
+                        }
+                        else{
+                            this.listChildSelected[j] = null;
+                            this.listIdChild[j] = null;
+                        }
+                        j = j + 1;
                     }
-                    else{
-                        this.listParentSelected[i] = this.allCategories.find(
-                            (el)=>el.id === this.categoryProducts[i].id
-                        );
-                        this.listIdParent[i] = this.listParentSelected[i].id;
-                        this.listChildSelected[i] = null;
-                        this.listIdChild[i] = null;
-                    }
+                    else
+                        continue;
                 }
                 this.chooseItem(this.listParentSelected[0], 'parent');
             }
