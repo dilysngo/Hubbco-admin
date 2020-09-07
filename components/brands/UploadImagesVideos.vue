@@ -42,6 +42,7 @@
                     ><i class="el-icon-zoom-in" /></span>
                     <span
                         class="el-upload-list__item-delete"
+                        @click="removeMedia(index)"
                     ><i class="el-icon-delete" /></span></span>
 
                 <el-dialog
@@ -201,6 +202,9 @@ export default{
         convertUrlMedia(url) {
             return convertToUrl(url);
         },
+        removeMedia(index) {
+            this.currentlistFormat.splice(index, 1);
+        }
     },
 };
 </script>
