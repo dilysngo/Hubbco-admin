@@ -9,7 +9,7 @@ export default{
         allBrandList:null,
         brandPagination:null,
         brandByCategories:null,
-        allBrandsOfSupplier:null,
+        allBrandsOfSupplier:[],
         productByBrand:null,
         brandDeletedId:null
     }),

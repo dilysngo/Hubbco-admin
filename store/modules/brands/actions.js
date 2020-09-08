@@ -71,6 +71,7 @@ export default{
         return data;
     },
     async getBrandByCategories({commit}, options) {
+        console.log(options);
         if(!options) options = {};
 
         const data = await this.$axios.$get(

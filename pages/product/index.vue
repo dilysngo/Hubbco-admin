@@ -25,8 +25,11 @@
                             <ul class="filter-sub">
                                 <li class="item">
                                     All Packages  
-                                    <span class="item-value">
-                                        {{ total }}
+                                    <span
+                                        class="item-value"
+                                        v-if="pagination"
+                                    >
+                                        {{ pagination.total }}
                                     </span>
                                 </li>
                             </ul>
@@ -69,18 +72,6 @@
                                 Date
                             </span>
                         </div>
-                        <!-- 
-                       
-                        <div class="col-lg col-md col-sm-12">
-                            <span class="txt-label">
-                                Promotion
-                            </span>
-                        </div>
-                        <div class="col-lg col-md col-sm-12">
-                            <span class="txt-label">
-                                Status
-                            </span>
-                        </div> -->
                         <div class="col-lg-2 col-md-2 col-sm-12">
                             <span class="txt-label">
                                 Actions
@@ -116,37 +107,10 @@
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-12">
                                 <span class="txt-label">
-                                    Date
+                                    {{ item.createdAt| moment }}
                                 </span>
                             </div>
-                            <!-- <div class="col-lg-2 col-md-2 col-sm-12">
-                            <span class="txt-label">
-                                Package type
-                            </span>
-                        </div>
                             <div class="col-lg-2 col-md-2 col-sm-12">
-                                <h3 class="item-normal">
-                                    {{ item.type }}
-                                </h3>
-                            </div>
-                            <div class="col-lg col-md col-sm-12 img-promotion">
-                                <h3 class="item-normal">
-                                    <img src="~/assets/images/promotion.svg">
-                                </h3>
-                            </div>
-                            <div class="col-lg col-md col-sm-12">
-                                <h3 class="item-normal">
-                                    Published
-                                </h3>
-                            </div> -->
-                            <div class="col-lg-2 col-md-2 col-sm-12">
-                                <!-- <a
-                                    href="/"
-                                    class="item-btn btn-view"
-                                >
-                                    <span class="icon-view" />
-                                </a> -->
-
                                 <nuxt-link
                                     class="create-link"
                                     :to="`/product/edit/${item.id}`"
@@ -156,8 +120,13 @@
                                     </button>
                                 </nuxt-link>
                             
-                                <button class="item-btn btn-view">
-                                    <span class="icon-delete" />
+                                <button
+                                    class="item-btn btn-view"
+                                    @click="deleteProduct(item)"
+                                >
+                                    <span
+                                        class="icon-delete"
+                                    />
                                 </button>
                             </div>
                         </div>
@@ -166,9 +135,9 @@
                 <div class="paginate">
                     <pagination
                         id="pagination"
-                        :skip="skip"
-                        :limit="limit"
-                        :total="total" 
+                        :skip="pagination.skip"
+                        :limit="pagination.limit"
+                        :total="pagination.total" 
                         @change="changePage"
                     />
                 </div>
@@ -202,56 +171,88 @@ export default{
             keyword:"",
             flag:false,
             categories:[],
-            page:1,
-            limit:10,
-            skip:0,
-            total:0,
+            page:1
         };
     },
     async created() {
         const _this = this;
 
-        await this.getProducts();
+        await this.handleGetProducts();
     },
     async mounted() {
-        // await this.findProduct();
-        // console.log('listProduct',this.listProduct);
+        this.search();
     },
   
     computed:{
 
-        ...mapGetters('products', ['listProduct']),
+        ...mapGetters('products', ['listProduct',"pagination"]),
         ...mapGetters("provider", ["listProvider"]),
         ...mapState(['domainMedia']),
         ...mapState({
             pagination:(state)=>state.products.pagination
         }),
-        // ...mapGetters("product", ["listProduct","pagination"]),
     },
     methods:{
-        async changePage(page) {
-            let data = pagination(page, this.limit);
-            this.skip = data;
-            await this.getProduct();
+        async remoteMethod(query) {
+            if(query) {
+                this.loading = true;
+                setTimeout(()=>{
+                    this.getSuppliers(query); 
+                }, 200);
+            }
+            else{
+                this.supplierList = [];
+            }
         },
-        handleUpdateSuccess() {
-            this.getProduct();
+        async search() {
+            await this.handleGetProducts();
+            this.total = this.pagination && this.pagination.total;
         },
-        async getProduct() {
+        async handleGetProducts() {
+            const _this = this;
             const obj = {
                 keyword:this.keyword, 
-                limit:this.limit, 
-                skip:this.skip
+                limit:this.pagination.limit, 
+                skip:this.pagination.skip
             };
-            const{results, pagination} = await this.getProducts(obj);
+            const{results, pagination} =  await this.getProducts(obj);
             this.categories = results;
             this.total = pagination && pagination.total;
         },
-        ...mapActions("provider", ["findProviders"]),
-        ...mapActions("product", ["findProduct"]),
-        ...mapActions("products",["getProducts"])
+        deleteProduct(item) {
+            this.$confirm('This will permanently delete the product. Continue?', 'Warning', {
+                confirmButtonText:'OK',
+                cancelButtonText:'Cancel',
+                type:'warning'
+            }).then(()=>{
+                this.productDeleteByID({_id:item.id});
+                this.$message({
+                    type:'success',
+                    message:'Delete completed'
+                });
+            }).catch(()=>{
+                this.$message({
+                    type:'info',
+                    message:'Delete canceled'
+                });          
+            });
+        },
+        async changePage(page) {
+            let data = pagination(page, this.pagination.limit);
+            this.pagination.skip = data;
+            await this.handleGetProducts();
+        },
+        
+        ...mapActions('products', [
+            , 'productDeleteByID','getProducts'
+        ]),
 
     },
+    filters:{
+        moment(date) {
+            return moment(date).format('DD-MM-YYYY');
+        }
+    }
 
 };
 </script>

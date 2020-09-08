@@ -2,12 +2,11 @@
 import types from'../../mutation-types';
 async function getProducts({commit,state}, data) {
     try{
-        console.log(state.pagination);
         const conditions = state.pagination;
-        const data = await this.$axios.$get(`api/products/?keyword=${conditions.keyword || ''}&skip=${conditions.skip || 0}&limit=${conditions.limit || 10}`);
-        commit(types.PRODUCTS_LIST, data.results);
-        commit(types.PRODUCTS_PAGINATION, data.pagination);
-        return data;
+        const fetchedData = await this.$axios.$get(`api/products/?keyword=${data.keyword || ''}&skip=${conditions.skip || 0}&limit=${conditions.limit || 10}`);
+        commit(types.PRODUCTS_LIST, fetchedData.results);
+        commit(types.PRODUCTS_PAGINATION, fetchedData.pagination);
+        return fetchedData;
     }
     catch(e) {
         console.log(e);
@@ -74,8 +73,6 @@ async function updateProduct({commit, state}, data) {
 }
 async function uploadAvatarProduct({commit, state}, data) {
     try{
-        // https://hubbco-core.namtech.xyz/api/products/avatar/
-        console.log(data);
         const formData = new FormData();
         formData.append('product', data.filesUploads);
         const fetchedData = this.$axios.$post(`/api/products/avatar/${data._id}`, formData,
@@ -109,8 +106,20 @@ async function uploadImageProduct({commit, state}, data) {
         console.log(e);
     }
 }
-
+async function productDeleteByID({commit, state}, data) {
+    try{
+        const fetchedData = await this.$axios.$delete(`api/products/${data._id}`);
+        if(fetchedData && fetchedData === true)
+            commit(types.SET_DELETE_PRODUCT, data._id);
+        else
+            this.errorText = 'Incorrect product';
+    }
+    catch(e) {
+        console.log(e);
+    }
+}
 export default{
+    productDeleteByID,
     uploadImageProduct,
     getProducts,
     createProduct,
