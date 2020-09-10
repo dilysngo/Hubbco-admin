@@ -6,6 +6,7 @@ import blog from'./modules/blog';
 import provider from'./modules/provider';
 import brands from'./modules/brands';
 import productsModule from'./modules/products';
+import suppliersModule from'./modules/suppliers';
 import{getCookie}from'../helpers/dataHelper';
 
 export default function() {
@@ -34,7 +35,8 @@ export default function() {
             blog,
             provider,
             brands,
-            products:productsModule
+            products:productsModule,
+            suppliers:suppliersModule
         }
     });
 };

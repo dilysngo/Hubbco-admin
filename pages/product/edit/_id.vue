@@ -8,6 +8,45 @@
             label-width="200px"
             style="margin-top: 20px;"
         >
+            <el-form-item label="Supplier">
+                <el-select
+                    v-model="formDataProduct.supplierId"
+                    clearable 
+                    filterable
+                    remote
+                    reserve-keyword
+                    placeholder="Choose supplier"
+                    :remote-method="remoteMethodSupplier"
+            
+                    :loading="loadingSupplier"
+                >
+                    <el-option
+                        v-for="item in listSuppliers"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                    />
+                </el-select>
+            </el-form-item>
+            <el-form-item label="Brands">
+                <el-select
+                    v-model="formDataProduct.brandId"
+                    clearable 
+                    filterable
+                    remote
+                    reserve-keyword
+                    placeholder="Choose brand"
+                    :remote-method="remoteMethodBrand"
+                    :loading="loadingSupplier"
+                >
+                    <el-option
+                        v-for="item in allBrandsOfSupplier.results"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                    />
+                </el-select>
+            </el-form-item>
             <el-form-item label="Procduct name">
                 <el-input v-model="formDataProduct.name" />
             </el-form-item>
@@ -111,6 +150,7 @@
 import UploadImage from'~/components/uploadImages';
 import{mapActions, mapState, mapGetters}from'vuex';
 import CommonData from'~/utils/common-data';
+import _ from'lodash';
 export default{
     components:{
         UploadImage
@@ -120,11 +160,12 @@ export default{
         return{
             CommonData,
             formDataProduct:{
+                supplierId:null,
                 name:'',
                 SKUCode:null,
                 origin:null,
                 rangedIn:null,
-                brandId:1,
+                brandId:20,
                 discription:null,
                 nutrition:null,
                 ingredients:null,
@@ -133,24 +174,35 @@ export default{
                 category:[],
                 infoSection:[],
                 medias:[],
+                brandId:null
             },
             imageUrl:'',
             filesUpload:'',
             filesUploadSlider:[],
+            loadingSupplier:false,
+            options:{
+                page:1,
+                limit:null,
+                skip:0,
+                total:0,
+                keywork:''
+            }
 
         };
     },
     computed:{
         ...mapState({
             domainMedia:state=>state.domainMedia,
+            filtersSupplier:state=>state.suppliers.filters
         }),
+        ...mapGetters('suppliers', [
+            'listSuppliers'
+        ]),
+        ...mapGetters('brands', ['allBrandsOfSupplier'])
 
     },
     async created() {
         const _this = this;
-
-        // await this.getProductByID();
-        // await this.getAllCategoryProducts();
         if(this.$route.params && this.$route.params.id) {
             _this.formDataProduct = await _this.$store.dispatch(
                 'products/getProductByID',
@@ -161,16 +213,53 @@ export default{
                 }
             );
         }
-        // if(this.$route && this.$route.query && this.$route.query.brandId) {
-        //     const result = await this.getBrandById(this.$route.query.brandId);
-        //     if(result && result.status && result.status === 200)
-        //         _this.formDataProduct.brand = result.data;
-        // }
-
-    // this.dataProductEditor.categories = _allCategories || [];
+    },
+    //  `/api/brands/category/${options.id}?keyword=${
+    //     options.keyword
+    // }&skip=${options.skip}&limit=${options.limit}`
+    watch:{
+        "formDataProduct.supplierId":function() {
+            this.querySupplier();
+            // this.formData.address = val;
+        },
     },
     methods:{
         ...mapActions('products', ['createProduct','getProductByID','updateProduct','uploadAvatarProduct','uploadImageProduct']),
+        ...mapActions('suppliers',['getAllSuppliers']),
+        ...mapActions('brands', ['getAllbrandsOfSupplier']),
+        async querySupplier(){
+            const dataFilter = {
+                id:this.formDataProduct.supplierId,
+                skip:this.options.skip,
+                limit:this.options.limit,
+                keyword:this.options.keywork
+            };
+            this.getAllbrandsOfSupplier(dataFilter);
+        },
+        async remoteMethodSupplier(query) {
+            const _this = this;
+ 
+            if(query) {
+                this.loading = true;
+                setTimeout(()=>{
+                    _this.filtersSupplier.keywork = _.cloneDeep(query) ;
+                    this.getAllSuppliers(); 
+    
+                }, 200);
+            }
+        },
+        async remoteMethodBrand(query) {
+            const _this = this;
+            console.log(query);
+            if(query) {
+                this.loading = true;
+                setTimeout(()=>{
+                    this.options.keywork = _.cloneDeep(query) ;
+                    this.querySupplier();
+    
+                }, 200);
+            }
+        },
         fileUpload(val) {
             this.filesUploadSlider = val;
         },
@@ -207,7 +296,7 @@ export default{
             }
         },
         goBack() {
-            console.log('go back');
+            this.$router.push({path:'/product'});
         },
         async submitProduct() {
             const _this = this;
