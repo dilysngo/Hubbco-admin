@@ -2,11 +2,14 @@ import actions from'./actions';
 import getters from'./getters';
 import mutations from'./mutations';
 const state = {
-    listProduct:null,
-    pagination:{
+    listSuppliers:[],
+    paginationSupplier:{
         skip:0, 
         limit:10, 
         total:0
+    },
+    filters:{
+        keywork:''
     },
     listningData:null,
     gradingResults:null,

@@ -17,8 +17,8 @@ export default{
     [types.PRODUCT_BY_CATEGORIES](state, data) {
         state.productByCategories = data;
     },
-    [types.PRODUCTS_LIST](state, data) {
-        state.listProduct = data;
+    [types.SUPPLIERS_LIST](state, data) {
+        state.listSuppliers = data;
     },
     [types.PRODUCTS_PAGINATION](state, pagination) {
         state.pagination = pagination;
