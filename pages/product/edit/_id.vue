@@ -4,8 +4,17 @@
             @back="goBack"
             content="Product"
         />
+        <div>
+            <el-button
+                style="float: right;"
+                type="primary"
+                @click="submitProduct()"
+            >
+                Save
+            </el-button>
+        </div>
         <el-form
-            label-width="200px"
+            label-width="300px"
             style="margin-top: 20px;"
         >
             <el-form-item label="Supplier">
@@ -17,7 +26,6 @@
                     reserve-keyword
                     placeholder="Choose supplier"
                     :remote-method="remoteMethodSupplier"
-            
                     :loading="loadingSupplier"
                 >
                     <el-option
@@ -28,6 +36,7 @@
                     />
                 </el-select>
             </el-form-item>
+        
             <el-form-item label="Brands">
                 <el-select
                     v-model="formDataProduct.brandId"
@@ -37,9 +46,10 @@
                     reserve-keyword
                     placeholder="Choose brand"
                     :remote-method="remoteMethodBrand"
-                    :loading="loadingSupplier"
+                    :loading="loadingBrands"
                 >
                     <el-option
+              
                         v-for="item in allBrandsOfSupplier.results"
                         :key="item.id"
                         :label="item.name"
@@ -60,25 +70,31 @@
                 <el-input v-model="formDataProduct.rangedIn" />
             </el-form-item>
             <el-form-item label="PRODUCT DISCRIPTION">
-                <el-input
-                    type="textarea"
-                    v-model="formDataProduct.discription"
-                />
+                <no-ssr>
+                    <vue-ckeditor
+                        v-model="formDataProduct.discription"
+                        :config="config"
+                    />
+                </no-ssr>
             </el-form-item>
             <el-form-item label="NUTRITION">
-                <el-input
-                    type="textarea"
-                    v-model="formDataProduct.nutrition"
-                />
+                <no-ssr>
+                    <vue-ckeditor
+                        v-model="formDataProduct.nutrition"
+                        :config="config"
+                    />
+                </no-ssr>
             </el-form-item>
             <el-form-item
                 label="INGREDIENTS
 "
             >
-                <el-input
-                    type="textarea"
-                    v-model="formDataProduct.ingredients"
-                />
+                <no-ssr>
+                    <vue-ckeditor
+                        v-model="formDataProduct.ingredients"
+                        :config="config"
+                    />
+                </no-ssr>
             </el-form-item>
             <el-form-item label="CERTIFICATIONS">
                 <el-checkbox-group v-model="formDataProduct.certifications">
@@ -91,7 +107,168 @@
                     </el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-   
+            <el-form-item label="PRODUCT VARIATIONS">
+                <table>
+                    <tr
+                        v-for="(item, indexvariations) in formDataProduct.variations"
+                        :key="indexvariations"
+                    >
+                        <td>
+                            <el-input
+                                v-if="status.variations.indexOf(indexvariations) > -1 "
+                                style="margin-bottom: 8px;"
+                                placeholder="Please input"
+                                v-model="formDataProduct.variations[indexvariations]"
+                            />
+                            <span v-if="status.variations.indexOf(indexvariations) === -1 ">
+                                {{ formDataProduct.variations[indexvariations] }}
+                            </span>
+                        </td>
+                        <td style="padding-left: 15px;">
+                            <div style="margin-bottom: 8px;">
+                                <span
+                                    v-if="status.variations.indexOf(indexvariations) === -1 "
+                                    @click="showEditVariations(indexvariations)"
+                                > <i class="el-icon-edit" /></span>  
+                                <span @click="deleteItem(indexvariations, 'variations')">
+                                    <i class="el-icon-delete" />
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <el-button
+                             
+                                @click="addNewVariation()"
+                                type="primary"
+                            >
+                                ADD VARIATION
+                            </el-button>
+                        </td>
+                    </tr>
+                </table>
+            </el-form-item>
+            <el-form-item label="INFORMAION SECTION">
+                <el-row
+                    v-for="(item, indexinfoSection) in formDataProduct.infoSection"
+                    :key="indexinfoSection"
+                >
+                    <el-col :span="12">
+                        <div v-if="status.infoSection.indexOf(indexinfoSection) > -1 ">
+                            <el-input
+                                type="textarea"
+                                autosize
+                                placeholder="Title"
+                                v-model="item.title"
+                            />
+                            <div style="margin: 20px 0;" />
+                            <el-input
+                                type="textarea"
+                                :autosize="{ minRows: 4, maxRows: 5}"
+                                placeholder="Enter your description"
+                                v-model="item.description"
+                            />
+                        </div>
+                        <div v-else>
+                            <p>{{ item.title }}</p>
+                            <p>{{ item.description }}</p>
+                        </div>
+                    </el-col>
+                    <el-col :span="12">
+                        <div style="margin-bottom: 8px;    padding-left: 20px; ">
+                            <span
+                                v-if="status.infoSection.indexOf(indexinfoSection) === -1 "
+                                @click="showEditInfoSection(indexinfoSection)"
+                            > <i class="el-icon-edit" /></span>  
+                            <span @click="deleteItem(indexinfoSection, 'infoSection')">
+                                <i class="el-icon-delete" />
+                            </span>
+                        </div>
+                    </el-col>
+                    <el-col :span="13">
+                        <div>      <el-divider /></div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="13">
+                        <div>
+                            <el-button
+                             
+                                @click="addNewIngredient()"
+                                type="primary"
+                            >
+                                ADD A NEW INFORMAION SECTION
+                            </el-button>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-form-item>
+            <el-form-item
+                label="PRODUCT SIZING INFORMATION"
+                v-if="formDataProduct.size && formDataProduct.size.length >2"
+            >  
+                <ul>
+                    <li>
+                        <el-input
+                            v-show="status.size.width"
+                            v-model="formDataProduct.size[0]"
+                            style="    width: 100px;"
+                            size="mini"
+                        />
+                        <span v-if="!status.size.width">{{ formDataProduct.size[0] }}</span>
+                        WIDTH   <span
+                            v-show="!status.size.width"
+                            title="Edit"
+                            @click="status.size.width =!status.size.width"
+                        >
+                            <i
+                                class="fa fa-pencil"
+                                aria-hidden="true"
+                            />
+                        </span>
+                    </li>
+                    <li>
+                        <el-input
+                            v-show="status.size.height"
+                            v-model="formDataProduct.size[1]"
+                            style="    width: 100px;"
+                            size="mini"
+                        />
+
+                        <span v-if="!status.size.height"> {{ formDataProduct.size[1] }} </span>   HEIGHT <span
+                            v-show="!status.size.height"
+                            title="Edit"
+                            @click="status.size.height =!status.size.height"
+                        >
+                            <i
+                                class="fa fa-pencil"
+                                aria-hidden="true"
+                            />
+                        </span>
+                    </li>
+
+                    <li>
+                        <el-input
+                            v-show="status.size.length"
+                            v-model="formDataProduct.size[2]"
+                            style="    width: 100px;"
+                            size="mini"
+                        />
+
+                        <span v-if="!status.size.length">{{ formDataProduct.size[2] }}</span> LENGTH <span
+                            v-show="!status.size.length"
+                            title="Edit"
+                            @click="status.size.length =!status.size.length"
+                        >
+                            <i
+                                class="fa fa-pencil"
+                                aria-hidden="true"
+                            />
+                        </span>
+                    </li> 
+                </ul>
+            </el-form-item>
             <el-form-item label="Avatar">
                 <div
                     class="avatar-uploader"
@@ -133,39 +310,41 @@
                     @imageUpload="fileUpload"
                 />
             </el-form-item>
-     
-            <el-form-item style="float: right;"> 
-                <el-button
-                    type="primary"
-                    @click="submitProduct"
-                >
-                    Save
-                </el-button>
-                <!-- <el-button>Cancel</el-button> -->
-            </el-form-item>
         </el-form>
+        <div>
+            <el-button
+                style="float: right;"
+                type="primary"
+                @click="submitProduct()"
+            >
+                Save
+            </el-button>
+        </div>
     </div>
 </template>
 <script>
 import UploadImage from'~/components/uploadImages';
 import{mapActions, mapState, mapGetters}from'vuex';
 import CommonData from'~/utils/common-data';
+import VueCkeditor from'vue-ckeditor2';
 import _ from'lodash';
 export default{
     components:{
-        UploadImage
+        UploadImage,VueCkeditor
     },
     data() {
         
         return{
             CommonData,
+           
             formDataProduct:{
+                brand:null,
                 supplierId:null,
+                brandId:null,
                 name:'',
                 SKUCode:null,
                 origin:null,
                 rangedIn:null,
-                brandId:20,
                 discription:null,
                 nutrition:null,
                 ingredients:null,
@@ -174,19 +353,49 @@ export default{
                 category:[],
                 infoSection:[],
                 medias:[],
-                brandId:null
+            
+                variations:[],
+                size:[0, 0, 0]
+            },
+
+            status:{
+              
+                name:true,
+                sku:true,
+                p_Origin:true,
+                rIn:true,
+                discription:false,
+                nutrition:false,
+                ingredients:false,
+                variations:[],
+                infoSection:[],
+                size:{
+                    width:false,
+                    height:false,
+                    length:false
+                },
+           
+                categories:[true, true],
             },
             imageUrl:'',
             filesUpload:'',
             filesUploadSlider:[],
             loadingSupplier:false,
+            loadingBrands:false,
             options:{
                 page:1,
-                limit:null,
+                limit:100,
                 skip:0,
                 total:0,
                 keywork:''
-            }
+            },
+            config:{
+                toolbar:[
+                    {name:'font', items:[ 'Bold', 'Italic', 'Underline']}
+                ],
+                height:350,
+                language:'en'
+            },
 
         };
     },
@@ -198,13 +407,13 @@ export default{
         ...mapGetters('suppliers', [
             'listSuppliers'
         ]),
-        ...mapGetters('brands', ['allBrandsOfSupplier'])
-
+        ...mapGetters('brands', ['allBrandsOfSupplier']),
+        ...mapGetters('products', ['getProduct'])
     },
     async created() {
         const _this = this;
         if(this.$route.params && this.$route.params.id) {
-            _this.formDataProduct = await _this.$store.dispatch(
+            await _this.$store.dispatch(
                 'products/getProductByID',
                 {
                     _id:this.$route && this.$route.params && this.$route.params.id
@@ -213,28 +422,93 @@ export default{
                 }
             );
         }
+        else{
+            _this.getAllSuppliers();
+        }
     },
-    //  `/api/brands/category/${options.id}?keyword=${
-    //     options.keyword
-    // }&skip=${options.skip}&limit=${options.limit}`
     watch:{
+        "getProduct":function() {
+            const _this = this;
+            this.formDataProduct = this.getProduct;
+            
+            let mapIdListSuppliers = _.map( _this.listSuppliers, function(o) {
+                return o.id;
+            });
+            if(_.indexOf(mapIdListSuppliers, this.formDataProduct.brand.supplier.id) === -1){
+                _this.listSuppliers =  _.cloneDeep(_this.listSuppliers.push(this.formDataProduct.brand.supplier)) ;
+            }
+              
+            if(this.allBrandsOfSupplier && this.allBrandsOfSupplier.results ){
+                this.allBrandsOfSupplier.results =  this.allBrandsOfSupplier.results.push(this.formDataProduct.brand) ;
+            }
+          
+        },
         "formDataProduct.supplierId":function() {
             this.querySupplier();
-            // this.formData.address = val;
         },
     },
     methods:{
-        ...mapActions('products', ['createProduct','getProductByID','updateProduct','uploadAvatarProduct','uploadImageProduct']),
-        ...mapActions('suppliers',['getAllSuppliers']),
-        ...mapActions('brands', ['getAllbrandsOfSupplier']),
-        async querySupplier(){
-            const dataFilter = {
-                id:this.formDataProduct.supplierId,
-                skip:this.options.skip,
-                limit:this.options.limit,
-                keyword:this.options.keywork
+
+        showEditInfoSection(index) {
+            const _this = this;
+            _this.status.infoSection.push(index);
+        },
+        addNewIngredient() {
+            const _this = this;
+            const _newItem = {
+                title:'',
+                description:'',
             };
-            this.getAllbrandsOfSupplier(dataFilter);
+
+            _this.formDataProduct.infoSection.push(_newItem);
+            _this.status.infoSection.push(
+                _this.formDataProduct.infoSection.length - 1
+            );
+        },
+        addNewVariation() {
+            const _this = this;
+            const _newItem = '';
+            _this.formDataProduct.variations.push(_newItem);
+            _this.status.variations.push(
+                _this.formDataProduct.variations.length - 1
+            );
+        },
+        deleteItem(index, type) {
+            const _this = this;
+            switch(type) {
+            case'variations':
+                _this.formDataProduct.variations.splice(index, 1);
+                break;
+            case'infoSection':
+                _this.formDataProduct.infoSection.splice(index, 1);
+                break;
+
+            default:
+            }
+        },
+        showEditVariations(index) {
+            const _this = this;
+            _this.status.variations.push(index);
+        },
+        
+        async querySupplier(){
+            const _this = this;
+            if(this.formDataProduct && this.formDataProduct.supplierId )    {
+                
+                await  this.getAllbrandsOfSupplier(
+                    {
+                        id:this.formDataProduct.supplierId,
+                        skip:this.options.skip,
+                        limit:this.options.limit,
+                        keyword:this.options.keywork
+                    }
+                );
+            }
+            else{
+                _this.allBrandsOfSupplier.results = [];
+                _this.formDataProduct.brandId = null;
+            }   
+        
         },
         async remoteMethodSupplier(query) {
             const _this = this;
@@ -250,11 +524,14 @@ export default{
         },
         async remoteMethodBrand(query) {
             const _this = this;
-            console.log(query);
+   
             if(query) {
+          
                 this.loading = true;
                 setTimeout(()=>{
+                    console.log(query);
                     this.options.keywork = _.cloneDeep(query) ;
+                    
                     this.querySupplier();
     
                 }, 200);
@@ -300,6 +577,7 @@ export default{
         },
         async submitProduct() {
             const _this = this;
+            console.log("hello");
             // await _this.$validator.validateAll().then(async (result)=>{
             //     if(result) {
             try{
@@ -339,6 +617,7 @@ export default{
                         message:'This is a success message',
                         offset:100,
                     });
+                    this.goBack();
                 }
                 else{
                     this.$notify({
@@ -367,7 +646,10 @@ export default{
                 );
             }
        
-        }
+        },
+        ...mapActions('products', ['createProduct','getProductByID','updateProduct','uploadAvatarProduct','uploadImageProduct']),
+        ...mapActions('suppliers',['getAllSuppliers']),
+        ...mapActions('brands', ['getAllbrandsOfSupplier'])
     
     }
 };

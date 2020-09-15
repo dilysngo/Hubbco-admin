@@ -3,16 +3,11 @@ import _ from'lodash';
 const SET_DATA_PRODUCTS_BY_BRAND = (state, messages)=>{
     state.product_brand = messages.results;
 };
-// const SET_DELETE_PRODUCT = (state, messages)=>{
-//     console.log('sds');
-//     // state.product_brand = _.filter(state.product_brand, function(o) {
-//     //     return o.id !== messages;
-//     // });
-// };
+const PRODUCT_BY_ID = (state, messages,)=>{
+    state.product = messages;
+};
 export default{
-
-    // SET_DATA_PRODUCTS,
-    // SET_UPDATE_PRODUCT,
+    PRODUCT_BY_ID,
     SET_DATA_PRODUCTS_BY_BRAND,
     [types.PRODUCT_BY_CATEGORIES](state, data) {
         state.productByCategories = data;
