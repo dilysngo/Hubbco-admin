@@ -24,8 +24,11 @@ async function createProduct({commit, state}, data) {
 async function getProductByID({commit, state}, data) {
     try{
         const fetchedData = await this.$axios.$get(`api/products/${data._id}`);
-        if(fetchedData && fetchedData.id)
+        console.log(fetchedData);
+        if(fetchedData && fetchedData.id){
+            commit('PRODUCT_BY_ID', fetchedData);
             return fetchedData;
+        }
 
         else
             this.errorText = 'Incorrect product';

@@ -39,14 +39,14 @@
                                 placeholder="Search..."
                                 v-model="keyword"
                             />
-                            <filter-select
+                            <!-- <filter-select
                                 :data="dataCategory"
                                 placeholder="Provider"
                             />
                             <filter-select
                                 :data="dataDate"
                                 placeholder="All Dates"
-                            />
+                            /> -->
                         </div>
                     </div>
                 </div>
@@ -148,7 +148,7 @@
 
 <script>
 import FilterKeyword from"~/components/FilterKeyword";
-import FilterSelect from"~/components/FilterSelect";
+// import FilterSelect from"~/components/FilterSelect";
 import Pagination from"~/components/Pagination";
 import{pagination}from'~/helpers/dataHelper';
 import{mapGetters, mapActions, mapState}from"vuex";
@@ -157,7 +157,7 @@ import moment from"moment";
 export default{
     components:{
         FilterKeyword,
-        FilterSelect,
+        // FilterSelect,
         Pagination
     },
     data() {
