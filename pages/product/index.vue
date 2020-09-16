@@ -20,36 +20,39 @@
         <div class="page-body">
             <div class="page-container">
                 <div class="page-filter">
-                    <div class="row align-items-center">
-                        <div class="col-xl-4 col-lg-5 col-md-5 col-sm-12">
-                            <ul class="filter-sub">
-                                <li class="item">
-                                    All Packages  
-                                    <span
-                                        class="item-value"
-                                        v-if="pagination"
-                                    >
-                                        {{ pagination.total }}
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-xl-8 col-lg-7 col-md-7 col-sm-12 text-right">
-                            <filter-keyword
-                                placeholder="Search..."
+                    <ul class="filter-sub">
+                        <li class="item">
+                            All Products
+                            <span
+                                class="item-value"
+                                v-if="pagination"
+                            >
+                                {{ pagination.total }}
+                            </span>
+                        </li>
+                    </ul>
+                    <el-form
+                        :model="formSearch"
+                        ref="form"
+                        :inline="true"
+                    >
+                        <el-form-item label="Keyword">
+                            <el-input
+                                placeholder="Please enter a keyword"
                                 v-model="keyword"
                             />
-                            <!-- <filter-select
-                                :data="dataCategory"
-                                placeholder="Provider"
-                            />
-                            <filter-select
-                                :data="dataDate"
-                                placeholder="All Dates"
-                            /> -->
-                        </div>
-                    </div>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button
+                                type="primary"
+                                @click="search"
+                            >
+                                Search
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
                 </div>
+         
                 <div class="page-list">
                     <div class="row row-label">
                         <div class="col-lg-2 col-md-2 col-sm-12">
@@ -147,7 +150,7 @@
 </template>
 
 <script>
-import FilterKeyword from"~/components/FilterKeyword";
+// import FilterKeyword from"~/components/FilterKeyword";
 // import FilterSelect from"~/components/FilterSelect";
 import Pagination from"~/components/Pagination";
 import{pagination}from'~/helpers/dataHelper';
@@ -156,7 +159,7 @@ import moment from"moment";
 
 export default{
     components:{
-        FilterKeyword,
+        // FilterKeyword,
         // FilterSelect,
         Pagination
     },
@@ -205,8 +208,10 @@ export default{
             }
         },
         async search() {
+            this.pagination.skip = 0;
+            this.pagination.limit = 10;
             await this.handleGetProducts();
-            this.total = this.pagination && this.pagination.total;
+            //this.total = this.pagination && this.pagination.total;
         },
         async handleGetProducts() {
             const _this = this;
