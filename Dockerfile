@@ -7,6 +7,6 @@ WORKDIR /usr/app
 COPY . .
 
 # Install app dependencies
-RUN npm install && npm run build 
+RUN npm install --no-cache && npm run build 
 
 CMD ["npm", "start"]
