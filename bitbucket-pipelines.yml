@@ -3,14 +3,27 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: node:10.15.3-alpine
+image: node:10.15.3
 
 pipelines:
   branches:
-    master:
+    dev:
       - step:
           name: Test to deployment
-          deployment: test
+          caches:
+            - node
+          script:
+            - npm install
+            - npm run build
+      - step:
+          name: Deploy to dev
+          script:
+            - ssh $DEV_USER@$DEV_ADDR "cd /projects/hubbco-dev/$BITBUCKET_REPO_SLUG && git pull && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
+    staging:
+      - step:
+          name: Test to deployment
+          caches:
+            - node
           script:
             - npm install
             - npm run build
@@ -18,18 +31,18 @@ pipelines:
           name: Deploy to staging
           deployment: staging
           script:
-            - apk add --update openssh
-            - ssh $STAG_USER@$STAG_ADDR "cd $STAG_PROJECT_PATH && git pull && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
-  custom: # Pipelines that are triggered manually
-    production-deployment:
+            - ssh $STAGING_USER@$STAGING_ADDR "cd /projects/hubbco-stag/$BITBUCKET_REPO_SLUG && git pull && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
+    master:
       - step:
           name: Test to deployment
-          deployment: test
+          caches:
+            - node
           script:
             - npm install
             - npm run build
       - step:
+          name: Deploy to production
           deployment: production
+          trigger: manual
           script:
-            - apk add --update openssh
-            - ssh $PROD_USER@$PROD_ADDR "cd $PROD_PROJECT_PATH && git pull && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
+            - ssh $PRODUCTION_USER@$PRODUCTION_ADDR "cd /projects/hubbco/$BITBUCKET_REPO_SLUG && git pull && docker system prune -f && docker-compose build && docker-compose up -d && exit;"

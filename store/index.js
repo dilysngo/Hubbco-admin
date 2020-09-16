@@ -4,11 +4,16 @@ import media from'./modules/media';
 import category from'./modules/category';
 import blog from'./modules/blog';
 import provider from'./modules/provider';
+import brands from'./modules/brands';
+import productsModule from'./modules/products';
+import suppliersModule from'./modules/suppliers';
 import{getCookie}from'../helpers/dataHelper';
 
 export default function() {
     return new Vuex.Store({
-        state:{},
+        state:{
+            domainMedia:process.env.DOMAIN_MEDIA_URL,
+        },
         mutations:{},
         actions:{
             nuxtServerInit({state}, {req}) {
@@ -28,8 +33,10 @@ export default function() {
             user,
             category,
             blog,
-            provider
-            
+            provider,
+            brands,
+            products:productsModule,
+            suppliers:suppliersModule
         }
     });
 };

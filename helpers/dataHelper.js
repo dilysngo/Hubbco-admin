@@ -31,6 +31,12 @@ export function convertToUrl(url) {
     return process.env.MINIO_URL + '/' + url;
 }
 
+export function checkImageByUrl(url) {
+    console.log(url);
+    const temp = url.split('.').reverse()[0];
+    return['gif', 'png', 'jpeg', 'jpg'].indexOf(temp.toLowerCase()) !== -1;
+}
+
 export function getCookie(cookieName, stringCookie) {
     let strCookie = new RegExp('' + cookieName + '[^;]+').exec(stringCookie);
     if(!strCookie)

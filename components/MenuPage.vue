@@ -33,8 +33,10 @@ export default{
             list:[
                 {name:'Dashboard', link:'/', icon:'icon-dashboard'},
                 {name:'Post', link:'/blog', icon:'icon-article'},
+                {name:'Products', link:'/product', icon:'icon-article'},
                 {name:'Blog Categories', link:'/category', icon:'icon-product'},
                 {name:'Media', link:'/media', icon:'icon-media'},
+                {name:'Brands', link:'/brands', icon:'icon-settings'}
                 // {name: 'Menu', link: '/menu', icon: 'icon-menus'},
                 // {name: 'Form', link: '/form', icon: 'icon-form'},
                 // {name: 'Settings', link: '/setting', icon: 'icon-settings'},

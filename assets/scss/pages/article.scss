@@ -58,6 +58,54 @@
     }
 }
 
+.create-brand {
+    .page-title{
+        font-size: 18px;
+    }
+    .text-right{
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: end;
+        -ms-flex-pack: end;
+        justify-content: flex-end;
+    }
+    .col-layout{
+        display: inline-block;
+        width: calc(100% - 250px);
+        margin-right: -4px;
+        vertical-align: top;
+        padding-right: 20px;
+        .ip-title{
+            height: 58px;
+            border: 1px solid #dfe3e6;
+            background-color: #ffffff;
+            color: rgba($color-primary, 0.4);
+            font-family: $font-second;
+            font-size: 27px;
+            font-weight: normal;
+            padding: 0 24px;
+            width: 100%;
+            margin-bottom: 24px;
+            outline: none;
+        }
+        .el-card {
+            width: 100%;
+            margin-top: 20px;
+            .el-image {
+                width: 100% !important;
+                height: 100% !important;
+                max-height: 300px;
+            }
+        }
+    }
+    .col-sidebar{
+        display: inline-block;
+        vertical-align: top;
+        width: 250px;
+    }
+}
+
 .sidebar-collapse{
     border-top: 1px solid #dfe3e6;
     .collapse-item{

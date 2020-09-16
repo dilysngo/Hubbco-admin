@@ -26,5 +26,14 @@ export default{
     async deleteCategory({commit}, id) {
         const data = await this.$axios.$delete(`/api/categories/${id}`);
         return data;
-    }
+    },
+
+    async getAllCategory({commit}, options) {
+        if(!options)
+            options = {};
+
+        const result = await this.$axios.get(`api/category-products?&skip=${options.skip}&limit=${options.limit}`);
+        commit(types.ALL_CATEGORY, result.data.results);
+        return result.data.results;
+    },
 };

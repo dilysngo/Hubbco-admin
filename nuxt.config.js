@@ -25,6 +25,8 @@ module.exports = {
         'bootstrap/dist/css/bootstrap.min.css',
         'font-awesome/css/font-awesome.min.css',
         '~/assets/scss/main.scss',
+        'element-ui/lib/theme-chalk/index.css',
+        'element-ui/lib/theme-chalk/reset.css',
     ],
     /*
     ** Customize the progress bar color
@@ -42,6 +44,8 @@ module.exports = {
         {src: '~/plugins/vue-chartjs', ssr: false},
         {src: '~/plugins/vue-ckeditor2', ssr: false},
         {src: '~/plugins/vue-ckeditor5', ssr: false},
+        {src: '~/plugins/element-ui', ssr: true},
+        {src: '~/plugins/vee-validate', ssr: false},
 
     ],
     /*
@@ -55,6 +59,8 @@ module.exports = {
             'vue-notification',
             'vue-ckeditor2',
             'vue-ckeditor5',
+            'element-ui',
+            'vee-validate',
 
         ],
         plugins: [
