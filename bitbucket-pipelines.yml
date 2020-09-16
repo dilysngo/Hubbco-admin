@@ -18,7 +18,7 @@ pipelines:
       - step:
           name: Deploy to dev
           script:
-            - ssh $DEV_USER@$DEV_ADDR "cd /projects/hubbco-dev/$BITBUCKET_REPO_SLUG && git pull && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
+            - ssh $DEV_USER@$DEV_ADDR "cd /projects/hubbco-dev/$BITBUCKET_REPO_SLUG && git pull && docker-compose stop && docker-compose rm && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
     staging:
       - step:
           name: Test to deployment
@@ -31,7 +31,7 @@ pipelines:
           name: Deploy to staging
           deployment: staging
           script:
-            - ssh $STAGING_USER@$STAGING_ADDR "cd /projects/hubbco-stag/$BITBUCKET_REPO_SLUG && git pull && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
+            - ssh $STAGING_USER@$STAGING_ADDR "cd /projects/hubbco-stag/$BITBUCKET_REPO_SLUG && git pull && docker-compose stop && docker-compose rm && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
     master:
       - step:
           name: Test to deployment
@@ -45,4 +45,4 @@ pipelines:
           deployment: production
           trigger: manual
           script:
-            - ssh $PRODUCTION_USER@$PRODUCTION_ADDR "cd /projects/hubbco/$BITBUCKET_REPO_SLUG && git pull && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
+            - ssh $PRODUCTION_USER@$PRODUCTION_ADDR "cd /projects/hubbco/$BITBUCKET_REPO_SLUG && git pull && docker-compose stop && docker-compose rm && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
