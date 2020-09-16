@@ -7,6 +7,7 @@ import provider from'./modules/provider';
 import brands from'./modules/brands';
 import productsModule from'./modules/products';
 import suppliersModule from'./modules/suppliers';
+import keywords from'./modules/keywords';
 import{getCookie}from'../helpers/dataHelper';
 
 export default function() {
@@ -36,7 +37,8 @@ export default function() {
             provider,
             brands,
             products:productsModule,
-            suppliers:suppliersModule
+            suppliers:suppliersModule,
+            keywords
         }
     });
 };

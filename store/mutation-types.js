@@ -6,6 +6,7 @@ import mediaTypes from'./modules/media/types';
 import brandTypes from'./modules/brands/types';
 import productsTypes from'./modules/products/types';
 import suppliersTypes from'./modules/suppliers/types';
+import keywordsTypes from'./modules/keywords/types';
 
 export default{
     ...userTypes,
@@ -15,5 +16,6 @@ export default{
     ...mediaTypes,
     ...brandTypes,
     ...productsTypes,
-    ...suppliersTypes
+    ...suppliersTypes,
+    ...keywordsTypes
 };

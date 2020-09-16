@@ -36,7 +36,8 @@ export default{
                 {name:'Products', link:'/product', icon:'icon-article'},
                 {name:'Blog Categories', link:'/category', icon:'icon-product'},
                 {name:'Media', link:'/media', icon:'icon-media'},
-                {name:'Brands', link:'/brands', icon:'icon-settings'}
+                {name:'Brands', link:'/brands', icon:'icon-settings'},
+                {name:'Keywords', link:'/keywords', icon:'icon-pages'}
                 // {name: 'Menu', link: '/menu', icon: 'icon-menus'},
                 // {name: 'Form', link: '/form', icon: 'icon-form'},
                 // {name: 'Settings', link: '/setting', icon: 'icon-settings'},
